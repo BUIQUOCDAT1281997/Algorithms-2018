@@ -96,8 +96,24 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        File file = new File(inputName);
+        FileReader fr = new FileReader(file);
+        BufferedReader br = new BufferedReader(fr);
+        List<Integer> list = new ArrayList<>();
+        String tem = br.readLine();
+        while (tem != null) {
+            list.add((int) (Double.parseDouble(tem) * 10));
+            tem = br.readLine();
+        }
+        int[] array = list.stream().mapToInt(i -> i).toArray();
+        Sorts.quickSort(array);
+        File f = new File(outputName);
+        FileWriter fw = new FileWriter(f);
+        for (int e : array) {
+            fw.write(String.valueOf(((double)e)/10)+"\n");
+        }
+        fw.close();
     }
 
     /**
