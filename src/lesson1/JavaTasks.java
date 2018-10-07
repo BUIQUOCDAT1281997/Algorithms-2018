@@ -32,8 +32,45 @@ public class JavaTasks {
      *
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTimes(String inputName, String outputName) throws Exception {
+        BufferedReader br = new BufferedReader(new FileReader(new File(inputName)));
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream(outputName));
+        String time = br.readLine();
+        List<Integer> list = new ArrayList<>();
+        int seconds;
+        int i = 0;
+        List<String> hms;
+        while (time != null) {
+            String regex = "(([01]\\d)|(2[0-4])):[0-5]\\d:[0-5]\\d";
+            if (!time.matches(regex)) throw new Exception("");
+            hms = Arrays.asList(time.split(":"));
+            list.add(Integer.parseInt(hms.get(0)) * 3600 + Integer.parseInt(hms.get(1)) * 60 + Integer.parseInt(hms.get(2)));
+            i++;
+            time = br.readLine();
+        }
+        int[] listTime = list.stream().mapToInt(Integer::intValue).toArray();
+        Sorts.quickSort(listTime);
+        String element = "";
+        int h = 0;
+        int m = 0;
+        int s = 0;
+        for (int a : listTime) {
+            h = a / 3600;
+            if (h < 10) {
+                element += "0" + h + ":";
+            } else element += h + ":";
+            m = (a - h * 3600) / 60;
+            if (m < 10) {
+                element += "0" + m + ":";
+            } else element += m + ":";
+            s = a - h * 3600 - m * 60;
+            if (s < 10) {
+                element += "0" + s;
+            } else element += s;
+            dos.writeBytes(element + "\n");
+            element = "";
+        }
+        dos.close();
     }
 
     /**
