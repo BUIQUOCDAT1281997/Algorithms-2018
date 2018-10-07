@@ -145,10 +145,37 @@ public class JavaTasks {
      * 2
      * 2
      */
-    static public void sortSequence(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortSequence(String inputName, String outputName) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(new File(inputName)));
+        List<Integer> list = new ArrayList<>();
+        String str = br.readLine();
+        while (str != null) {
+            list.add(Integer.parseInt(str));
+            str = br.readLine();
+        }
+        int[] array = list.stream().mapToInt(i -> i).toArray();
+        Sorts.quickSort(array);
+        int maxQuantity = 1;
+        int countQuantity = 1;
+        int value = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if ((array[i] != array[i - 1]) || (i == array.length - 1)) {
+                if (i == array.length - 1) countQuantity++;
+                if (countQuantity > maxQuantity || (countQuantity == maxQuantity && value > array[i - 1])) {
+                    value = array[i - 1];
+                    maxQuantity = countQuantity;
+                }
+                countQuantity = 0;
+            }
+            countQuantity++;
+        }
+        FileWriter fw = new FileWriter(new File(outputName));
+        for (int element : list) {
+            if (element != value) fw.write(String.valueOf(element) + "\n");
+        }
+        for (int j = 1; j < maxQuantity + 1; j++) fw.write(String.valueOf(value) + "\n");
+        fw.close();
     }
-
     /**
      * Соединить два отсортированных массива в один
      *
