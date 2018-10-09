@@ -37,38 +37,18 @@ public class JavaTasks {
         DataOutputStream dos = new DataOutputStream(new FileOutputStream(outputName));
         String time = br.readLine();
         List<Integer> list = new ArrayList<>();
-        int seconds;
-        int i = 0;
-        List<String> hms;
         while (time != null) {
-            String regex = "(([01]\\d)|(2[0-4])):[0-5]\\d:[0-5]\\d";
-            if (!time.matches(regex)) throw new Exception("");
-            hms = Arrays.asList(time.split(":"));
-            list.add(Integer.parseInt(hms.get(0)) * 3600 + Integer.parseInt(hms.get(1)) * 60 + Integer.parseInt(hms.get(2)));
-            i++;
+            if (!time.matches("(([01]\\d)|(2[0-4])):[0-5]\\d:[0-5]\\d")) throw new Exception("");
+            list.add(Integer.parseInt(time.substring(0, 2)) * 3600 +
+                    Integer.parseInt(time.substring(3, 5)) * 60 +
+                    Integer.parseInt(time.substring(6, 8))
+            );
             time = br.readLine();
         }
         int[] listTime = list.stream().mapToInt(Integer::intValue).toArray();
         Sorts.quickSort(listTime);
-        String element = "";
-        int h = 0;
-        int m = 0;
-        int s = 0;
-        for (int a : listTime) {
-            h = a / 3600;
-            if (h < 10) {
-                element += "0" + h + ":";
-            } else element += h + ":";
-            m = (a - h * 3600) / 60;
-            if (m < 10) {
-                element += "0" + m + ":";
-            } else element += m + ":";
-            s = a - h * 3600 - m * 60;
-            if (s < 10) {
-                element += "0" + s;
-            } else element += s;
-            dos.writeBytes(element + "\n");
-            element = "";
+        for (int element : listTime) {
+            dos.writeBytes(String.format("%02d:%02d:%02d", element / 3600, (element % 3600) / 60, element % 60) + "\n");
         }
         dos.close();
     }
@@ -227,7 +207,10 @@ public class JavaTasks {
      *
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
-    static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
-        throw new NotImplementedError();
+     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
+        for (int i=0; i<first.length; i++){
+            second[i]=first[i];
+        }
+        Arrays.sort(second);
     }
 }
