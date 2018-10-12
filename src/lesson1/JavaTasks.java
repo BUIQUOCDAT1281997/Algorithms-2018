@@ -2,6 +2,11 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**

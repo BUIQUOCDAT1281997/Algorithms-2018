@@ -82,7 +82,11 @@ public class JavaAlgorithms {
      * Х х Х
      */
     static public int josephTask(int menNumber, int choiceInterval) {
-        throw new NotImplementedError();
+        int a = 0;
+        for (int i = 2; i <= menNumber; i++) {
+            a = (choiceInterval + a) % i; // я нашел эту формулу на интернете
+        }
+        return a + 1;
     }
 
     /**
@@ -96,8 +100,27 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
+    static public String findString(String firs, String second, int i, int j) {
+        String str = String.valueOf(firs.charAt(i));
+        int m = 1;
+        while ((i + m) < firs.length() && (j + m) < second.length() && firs.charAt(i + m) == second.charAt(j + m)) {
+            str += firs.charAt(i + m);
+            m++;
+        }
+        return str;
+    }
+
     static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+        String result = "";
+        for (int i = 0; i < firs.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+                if (firs.charAt(i) == second.charAt(j)) {
+                    String str = findString(firs, second, i, j);
+                    if (result.length() < str.length()) result = str;
+                }
+            }
+        }
+        return result;
     }
 
     /**
