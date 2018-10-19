@@ -90,7 +90,7 @@ public class JavaAlgorithms {
     static public int josephTask(int menNumber, int choiceInterval) {
         int a = 0;
         for (int i = 2; i <= menNumber; i++) {
-            a = (choiceInterval + a) % i; // я нашел эту формулу на интернете
+            a = (choiceInterval + a) % i;
         }
         return a + 1;
     }

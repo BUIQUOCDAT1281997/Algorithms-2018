@@ -58,6 +58,7 @@ public class JavaTasks {
         }
         dos.close();
         // трудоёмкост : O(log(n))
+        // ресурсоёмкост : O(n)
     }
 
     /**
@@ -138,7 +139,8 @@ public class JavaTasks {
             fw.write(String.valueOf(e / 10) + "\n");
         }
         fw.close();
-        // трудоёмкост : O(log(n))
+        // трудоёмкост : O(n*log(n))
+        // ресурсоёмкост : O(n)
     }
 
     /**
@@ -178,18 +180,20 @@ public class JavaTasks {
             list.add(Integer.parseInt(str));
             str = br.readLine();
         }
-        list.sort(Integer::compareTo);
-        int maxQuantity = 1;
-        int countQuantity = 1;
+        Collections.sort(list);
+        int maxQuantity = 0;
+        int countQuantity = 0;
         int value = list.get(0);
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i) != list.get(i - 1)) {
+        int element = list.get(0);
+        for (int i : list) {
+            if (i != element) {
                 countQuantity = 0;
+                element = i;
             }
             countQuantity++;
             if (countQuantity > maxQuantity) {
                 maxQuantity = countQuantity;
-                value = list.get(i);
+                value = i;
             }
         }
         FileWriter fw = new FileWriter(new File(outputName));
@@ -202,7 +206,8 @@ public class JavaTasks {
         for (int j = 1; j < maxQuantity + 1; j++) fw.write(String.valueOf(value) + "\n");
         fw.close();
 
-        // трудоёмкост : O(log(n))
+        // трудоёмкост : O(n*log(n))
+        // ресурсоёмкост : O(n)
     }
 
     /**
@@ -239,5 +244,6 @@ public class JavaTasks {
             }
         }
         // трудоёмкост : O(n)
+        // ресурсоёмкост : O(1)
     }
 }
