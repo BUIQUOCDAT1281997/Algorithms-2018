@@ -37,37 +37,8 @@ public class JavaAlgorithms {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader(new File(inputName)));
-        List<Integer> list = new ArrayList<>();
-        String str = br.readLine();
-        while (str != null) {
-            list.add(Integer.parseInt(str));
-            str = br.readLine();
-        }
-        Pair<Integer, Integer> pair = null;
-        List<Integer> list1 = list.subList(0, list.size() - 1);
-        List<Integer> list2 = new ArrayList<>();
-        list2.add(list.get(list.size() - 1));
-        int max2 = Collections.max(list2);
-        int min1 = Collections.min(list1);
-        int max = 0;
-        while (!list1.isEmpty()) {
-            if (max2 - min1 > max) {
-                max = max2 - min1;
-                pair = new Pair<>(list1.indexOf(min1) + 1, list1.size() + list2.size() - list2.indexOf(max2));
-            }
-            list2.add(list1.get(list1.size() - 1));
-            list1.remove(list1.size() - 1);
-            int lastElement = list2.get(list2.size() - 1);
-            if (max2 < lastElement) {
-                max2 = lastElement;
-            }
-            if (min1 == lastElement && !list1.isEmpty()) {
-                min1 = Collections.min(list1);
-            }
-        }
-        return pair;
+    static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
+        throw new NotImplementedError();
     }
 
     /**
