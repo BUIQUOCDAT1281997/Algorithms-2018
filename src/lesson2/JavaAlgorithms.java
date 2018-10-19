@@ -93,6 +93,9 @@ public class JavaAlgorithms {
             a = (choiceInterval + a) % i;
         }
         return a + 1;
+        
+        // трудоёмкост : O(n) n- menNumber
+        // ресурсоёмкост : O(1)
     }
 
     /**
@@ -106,27 +109,27 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String findString(String firs, String second, int i, int j) {
-        String str = String.valueOf(firs.charAt(i));
-        int m = 1;
-        while ((i + m) < firs.length() && (j + m) < second.length() && firs.charAt(i + m) == second.charAt(j + m)) {
-            str += firs.charAt(i + m);
-            m++;
-        }
-        return str;
-    }
 
     static public String longestCommonSubstring(String firs, String second) {
-        String result = "";
+        int[][] matrix = new int[firs.length()][second.length()];
+        int maxLengthSub = 0;
+        int location = 0;
         for (int i = 0; i < firs.length(); i++) {
             for (int j = 0; j < second.length(); j++) {
                 if (firs.charAt(i) == second.charAt(j)) {
-                    String str = findString(firs, second, i, j);
-                    if (result.length() < str.length()) result = str;
-                }
+                    matrix[i][j] = (i > 0 && j > 0) ? matrix[i - 1][j - 1] + 1 : 1;
+                    if (matrix[i][j] > maxLengthSub) {
+                        maxLengthSub = matrix[i][j];
+                        location = i;
+                    }
+                } else matrix[i][j] = 0;
             }
         }
-        return result;
+        if (maxLengthSub == 0) return "";
+        else return firs.substring(location - maxLengthSub + 1, location + 1);
+
+        // трудоёмкост : O(n*m) n- firs.length m-second.length
+        // ресурсоёмкост : O(n*m)
     }
 
     /**
