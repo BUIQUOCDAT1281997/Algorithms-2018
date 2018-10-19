@@ -39,6 +39,30 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+        try {
+            sortTimes("input/time_int4.txt","temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        21:40:07
+                        """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
+        try {
+            sortTimes("input/time_int5.txt","temp.txt")
+            assertFileContent("temp.txt", File("input/time_out5.txt").readLines().joinToString(separator = "\n"))
+        } finally {
+            File("temp.txt").delete()
+        }
     }
 
     protected fun sortAddresses(sortAddresses: (String, String) -> Unit) {
@@ -114,6 +138,28 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         }
         testGeneratedTemperatures(10)
         testGeneratedTemperatures(250)
+
+        try {
+            sortTemperatures("input/temp_int2.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                        11.0
+                    """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+
+        testGeneratedTemperatures(500)
     }
 
     protected fun sortSequence(sortSequence: (String, String) -> Unit) {
@@ -147,6 +193,46 @@ abstract class AbstractTaskTests : AbstractFileTests() {
                         12
                         12
                     """.trimIndent())
+        } finally {
+            File("temp.txt").delete()
+        }
+
+        try {
+            sortSequence("input/seq_int3.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        25
+                        25
+                        25
+                        25
+                        25
+                        25
+                        25
+                        25
+                        25
+                        25
+                        """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+
+        try {
+            sortSequence("input/seq_int4.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """
+                        2
+                        3
+                        4
+                        5
+                        6
+                        7
+                        8
+                        9
+                        10
+                        1
+                        """.trimIndent()
+            )
         } finally {
             File("temp.txt").delete()
         }

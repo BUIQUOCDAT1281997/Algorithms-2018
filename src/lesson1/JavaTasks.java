@@ -4,7 +4,6 @@ import kotlin.NotImplementedError;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +57,7 @@ public class JavaTasks {
             dos.writeBytes(String.format("%02d:%02d:%02d", element / 3600, (element % 3600) / 60, element % 60) + "\n");
         }
         dos.close();
+        // трудоёмкост : O(log(n))
     }
 
     /**
@@ -120,25 +120,25 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+    static public void sortTemperatures(String inputName, String outputName) throws IOException, IllegalAccessException {
         File file = new File(inputName);
         FileReader fr = new FileReader(file);
         BufferedReader br = new BufferedReader(fr);
-        List<Integer> list = new ArrayList<>();
+        List<Double> list = new ArrayList<>();
         String tem = br.readLine();
         while (tem != null) {
-            list.add((int) (Double.parseDouble(tem) * 10));
+            if (Double.parseDouble(tem) < -273.0 || Double.parseDouble(tem) > 500) throw new IllegalAccessException("");
+            list.add((Double.parseDouble(tem) * 10));
             tem = br.readLine();
         }
-        int[] array = new int[list.size()];
-       for (int i=0;i<list.size();i++) array[i]=list.get(i);
-        Sorts.quickSort(array);
+        Collections.sort(list);
         File f = new File(outputName);
         FileWriter fw = new FileWriter(f);
-        for (int e : array) {
-            fw.write(String.valueOf(((double) e) / 10) + "\n");
+        for (double e : list) {
+            fw.write(String.valueOf(e / 10) + "\n");
         }
         fw.close();
+        // трудоёмкост : O(log(n))
     }
 
     /**
@@ -178,29 +178,31 @@ public class JavaTasks {
             list.add(Integer.parseInt(str));
             str = br.readLine();
         }
-        int[] array = new int[list.size()];
-        for (int j = 0; j < list.size(); j++) array[j] = list.get(j);
-        Sorts.quickSort(array);
+        list.sort(Integer::compareTo);
         int maxQuantity = 1;
         int countQuantity = 1;
-        int value = array[0];
-        for (int i = 1; i < array.length; i++) {
-            if ((array[i] != array[i - 1]) || (i == array.length - 1)) {
-                if (i == array.length - 1) countQuantity++;
-                if (countQuantity > maxQuantity || (countQuantity == maxQuantity && value > array[i - 1])) {
-                    value = array[i - 1];
-                    maxQuantity = countQuantity;
-                }
+        int value = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            if (list.get(i) != list.get(i - 1)) {
                 countQuantity = 0;
             }
             countQuantity++;
+            if (countQuantity > maxQuantity) {
+                maxQuantity = countQuantity;
+                value = list.get(i);
+            }
         }
         FileWriter fw = new FileWriter(new File(outputName));
-        for (int element : list) {
-            if (element != value) fw.write(String.valueOf(element) + "\n");
+        br = new BufferedReader(new FileReader(new File(inputName)));
+        str = br.readLine();
+        while (str != null) {
+            if (Integer.parseInt(str) != value) fw.write(str + "\n");
+            str = br.readLine();
         }
         for (int j = 1; j < maxQuantity + 1; j++) fw.write(String.valueOf(value) + "\n");
         fw.close();
+
+        // трудоёмкост : O(log(n))
     }
 
     /**
@@ -218,27 +220,24 @@ public class JavaTasks {
      * Результат: second = [1 3 4 9 9 13 15 20 23 28]
      */
     static <T extends Comparable<T>> void mergeArrays(T[] first, T[] second) {
-        List<T> list = new ArrayList<>();
         int i = 0;
         int j = first.length;
-        while (i < first.length || j < second.length) {
-            if (i>=first.length){
-                list.add(second[j]);
-                j++;
-                continue;
-            }if (j>=second.length){
-                list.add(first[i]);
+        int k = -1;
+        while (k < second.length && i < first.length) {
+            k++;
+            if (j >= second.length) {
+                second[k] = first[i];
                 i++;
                 continue;
             }
             if (first[i].compareTo(second[j]) < 0) {
-                list.add(first[i]);
+                second[k] = first[i];
                 i++;
             } else {
-                list.add(second[j]);
+                second[k] = second[j];
                 j++;
             }
         }
-        for (int e = 0; e < list.size(); e++) second[e] = list.get(e);
+        // трудоёмкост : O(n)
     }
 }
