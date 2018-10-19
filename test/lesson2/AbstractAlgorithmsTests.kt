@@ -66,6 +66,8 @@ abstract class AbstractAlgorithmsTests {
         assertEquals(50000000, josephTask(50000000, 1))
         assertEquals(3, josephTask(8, 5))
         assertEquals(28, josephTask(40, 3))
+        assertEquals(5, josephTask(10, 4))
+        assertEquals(8, josephTask(16, 3))
         var menNumber = 2
         for (i in 1..20) {
             assertEquals(1, josephTask(menNumber, 2))
@@ -77,6 +79,10 @@ abstract class AbstractAlgorithmsTests {
         assertEquals("", longestCommonSubstring("мой мир", "я"))
         assertEquals("зд", longestCommonSubstring("здравствуй мир", "мы здесь"))
         assertEquals("СЕРВАТОР", longestCommonSubstring("ОБСЕРВАТОРИЯ", "КОНСЕРВАТОРЫ"))
+        assertEquals("", longestCommonSubstring("", ""))
+        assertEquals("WARNING: TestEngine with ID 'junit-vintage' failed to discover tests",
+                longestCommonSubstring("WARNING: TestEngine with ID 'junit-vintage' failed to discover tests",
+                        "WARNING: TestEngine with ID 'junit-vintage' failed to discover tests"))
         assertEquals("огда ", longestCommonSubstring(
                 """
 Мой дядя самых честных правил,

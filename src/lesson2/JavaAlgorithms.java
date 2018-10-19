@@ -93,7 +93,7 @@ public class JavaAlgorithms {
             a = (choiceInterval + a) % i;
         }
         return a + 1;
-        
+
         // трудоёмкост : O(n) n- menNumber
         // ресурсоёмкост : O(1)
     }
