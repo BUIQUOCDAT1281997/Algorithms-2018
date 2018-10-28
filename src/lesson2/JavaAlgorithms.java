@@ -3,13 +3,8 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
@@ -143,7 +138,27 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        if (limit <= 1) return 0;
+        boolean[] array = new boolean[limit + 1];
+        for (int s = 2; s <= limit; s++) {
+            array[s] = true;
+        }
+        array[0] = false;
+        array[1] = false;
+        for (int i = 2; i <= Math.sqrt(limit); i++) {
+            if (array[i]) {
+                for (int j = i * i; j <= limit; j += i) array[j] = false;
+            }
+        }
+        int result = 0;
+        for (boolean e : array) {
+            if (e) result++;
+        }
+        return result;
+
+        // трудоёмкост : O(n log log n) n-limit
+        // ресурсоёмкост : O(n+1)
+        // Источник : Sieve of Eratosthenes
     }
 
     /**
@@ -173,6 +188,5 @@ public class JavaAlgorithms {
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
     static public Set<String> baldaSearcher(String inputName, Set<String> words) {
-        throw new NotImplementedError();
-    }
+        throw new NotImplementedError();}
 }
