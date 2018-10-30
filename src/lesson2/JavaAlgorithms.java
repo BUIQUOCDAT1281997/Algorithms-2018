@@ -187,6 +187,67 @@ public class JavaAlgorithms {
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
-    static public Set<String> baldaSearcher(String inputName, Set<String> words) {
-        throw new NotImplementedError();}
+    static public boolean testWord(boolean[][] booleans, String[][] array, String word, int x, int y) {
+        if (word.length() == 1) return true;
+        String str = String.valueOf(word.charAt(1));
+        String sub = word.substring(1);
+
+        if (x > 0 && array[x - 1][y].equals(str) && !booleans[x - 1][y]) {
+            booleans[x][y] = true;
+            if (testWord(booleans, array, sub, x - 1, y)) return true;
+        }
+        if (x + 1 < array.length && array[x + 1][y].equals(str) && !booleans[x + 1][y]) {
+            booleans[x][y] = true;
+            if (testWord(booleans, array, sub, x + 1, y)) return true;
+        }
+        if (y > 0 && array[x][y - 1].equals(str) && !booleans[x][y - 1]) {
+            booleans[x][y] = true;
+            if (testWord(booleans, array, sub, x, y - 1)) return true;
+        }
+        if (y + 1 < array[0].length && array[x][y + 1].equals(str) && !booleans[x][y + 1]) {
+            booleans[x][y] = true;
+            if (testWord(booleans, array, sub, x, y + 1)) return true;
+        }
+        booleans[x][y] = false;
+        return false;
+    }
+
+    static public Set<String> baldaSearcher(String inputName, Set<String> words) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(new File(inputName)));
+        String str = br.readLine();
+        List<String> list = new ArrayList<>();
+        while (str != null) {
+            list.add(str);
+            str = br.readLine();
+        }
+        String[][] arrayWords = new String[list.size()][list.get(0).length() / 2 + 1];
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.get(i).length(); j += 2) {
+                arrayWords[i][j / 2] = String.valueOf(list.get(i).charAt(j));
+            }
+        }
+        Set<String> result = new HashSet<>();
+        boolean[][] booleans = new boolean[arrayWords.length][arrayWords[0].length];
+        int count;
+        for (String element : words) {
+            for (int i = 0; i < arrayWords.length; i++) {
+                count = 0;
+                for (int j = 0; j < arrayWords[0].length; j++) {
+                    if (arrayWords[i][j].equals(String.valueOf(element.charAt(0)))) {
+                        if (testWord(booleans, arrayWords, element, i, j)) {
+                            result.add(element);
+                            booleans = new boolean[arrayWords.length][arrayWords[0].length];
+                            count++;
+                            break;
+                        }
+                    }
+                }
+                if (count == 1) break;
+            }
+        }
+        return result;
+    }
+
+    // трудоёмкост : O(n*m) - n это число строк и m это число букв в одной строке
+    // ресурсоёмкост : O(n*m)
 }
