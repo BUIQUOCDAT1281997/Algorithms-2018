@@ -57,7 +57,7 @@ public class JavaTasks {
             dos.writeBytes(String.format("%02d:%02d:%02d", element / 3600, (element % 3600) / 60, element % 60) + "\n");
         }
         dos.close();
-        // трудоёмкост : O(log(n))
+        // трудоёмкост : O(n*log(n))
         // ресурсоёмкост : O(n)
     }
 
