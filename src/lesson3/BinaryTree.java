@@ -36,12 +36,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         Node<T> newNode = new Node<>(t);
         if (closest == null) {
             root = newNode;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             assert closest.left == null;
             closest.left = newNode;
-        }
-        else {
+        } else {
             assert closest.right == null;
             closest.right = newNode;
         }
@@ -66,9 +64,76 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        if (!contains(o)) return false;
+        @SuppressWarnings("unchecked")
+        T data = (T) o;
+        Node<T> parent = root;
+        Node<T> current = root;
+        boolean isLeftChild = false;
+        while (current.value != data) {
+            parent = current;
+            if (data.compareTo(current.value) > 0) {
+                current = current.right;
+                isLeftChild = false;
+            } else {
+                current = current.left;
+                isLeftChild = true;
+            }
+        }
+        if (current.left == null) {
+            if (current == root) {
+                root = current.right;
+            } else if (isLeftChild) {
+                parent.left = current.right;
+            } else {
+                parent.right = current.right;
+            }
+        } else if (current.right == null) {
+            if (current == root) {
+                root = current.left;
+            } else if (isLeftChild) {
+                parent.left = current.left;
+            } else {
+                parent.right = current.left;
+            }
+        } else {
+            Node<T> successor = current.right;
+            Node<T> successorParent = current;
+
+            while (successor.left != null) {
+                successorParent = successor;
+                successor = successor.left;
+            }
+
+            if (successor != current.right) {
+                successorParent.left = successor.right;
+                successor.right = current.right;
+            }
+            successor.left = current.left;
+
+            if (current == root) {
+                root = successor;
+            } else if (isLeftChild) {
+                parent.left = successor;
+            } else {
+                parent.right = successor;
+            }
+        }
+        return true;
     }
+
+   // public Node<T> getRoot() {
+    //    return root;
+   // }
+
+   // private Set<Node<T>> mang = new HashSet<>();
+   /* public void duyetcay(Node<T> node) {
+        if (node == null) return;
+        //System.out.print(node.value + " ");
+        mang.add(node);
+        duyetcay(node.left);
+        duyetcay(node.right);
+    }*/
 
     @Override
     public boolean contains(Object o) {
@@ -87,12 +152,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         int comparison = value.compareTo(start.value);
         if (comparison == 0) {
             return start;
-        }
-        else if (comparison < 0) {
+        } else if (comparison < 0) {
             if (start.left == null) return start;
             return find(start.left, value);
-        }
-        else {
+        } else {
             if (start.right == null) return start;
             return find(start.right, value);
         }
@@ -102,12 +165,15 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
-        private BinaryTreeIterator() {}
+        private BinaryTreeIterator() {
+        }
 
         /**
          * Поиск следующего элемента
          * Средняя
          */
+       // private T count =null;
+
         private Node<T> findNext() {
             // TODO
             throw new NotImplementedError();
