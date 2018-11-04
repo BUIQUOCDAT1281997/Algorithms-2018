@@ -26,6 +26,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     private int size = 0;
 
+    private List<Node<T>> listNodes = new ArrayList<>();
+
     @Override
     public boolean add(T t) {
         Node<T> closest = find(t);
@@ -34,6 +36,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return false;
         }
         Node<T> newNode = new Node<>(t);
+        listNodes.add(newNode);
         if (closest == null) {
             root = newNode;
         } else if (comparison < 0) {
@@ -58,6 +61,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return right == null || right.value.compareTo(node.value) > 0 && checkInvariant(right);
     }
 
+
     /**
      * Удаление элемента в дереве
      * Средняя
@@ -80,6 +84,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 isLeftChild = true;
             }
         }
+        listNodes.remove(current);
         if (current.left == null) {
             if (current == root) {
                 root = current.right;
@@ -122,19 +127,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return true;
     }
 
-   // public Node<T> getRoot() {
-    //    return root;
-   // }
-
-   // private Set<Node<T>> mang = new HashSet<>();
-   /* public void duyetcay(Node<T> node) {
-        if (node == null) return;
-        //System.out.print(node.value + " ");
-        mang.add(node);
-        duyetcay(node.left);
-        duyetcay(node.right);
-    }*/
-
     @Override
     public boolean contains(Object o) {
         @SuppressWarnings("unchecked")
@@ -165,6 +157,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
+
         private BinaryTreeIterator() {
         }
 
@@ -172,11 +165,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Поиск следующего элемента
          * Средняя
          */
-       // private T count =null;
+
+        private int location = 0;
 
         private Node<T> findNext() {
-            // TODO
-            throw new NotImplementedError();
+            if (listNodes.isEmpty()) return null;
+            else return (location < listNodes.size()) ? listNodes.get(location++) : null;
         }
 
         @Override
@@ -197,8 +191,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            if (location < listNodes.size()) {
+                BinaryTree.this.remove(listNodes.get(location).value);
+            }
         }
     }
 
