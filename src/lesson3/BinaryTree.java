@@ -172,11 +172,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         private Iterator<T> iterator = listNodes.iterator();
 
         private Node<T> findNext() {
-            //if (iterator.hasNext()) {
-              //  return find(iterator.next());
-            //}
-            //return null;
-            return (iterator.hasNext()) ? find(iterator.next()):null;
+            if (iterator.hasNext()) {
+                return find(iterator.next());
+            }
+            throw new NoSuchElementException();
+
         }
 
         @Override
