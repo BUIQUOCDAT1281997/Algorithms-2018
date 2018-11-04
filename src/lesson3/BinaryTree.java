@@ -26,7 +26,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     private int size = 0;
 
-    private List<Node<T>> listNodes = new ArrayList<>();
+    private Set<T> listNodes = new TreeSet<>();
 
     @Override
     public boolean add(T t) {
@@ -36,7 +36,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return false;
         }
         Node<T> newNode = new Node<>(t);
-        listNodes.add(newNode);
+        listNodes.add(t);
         if (closest == null) {
             root = newNode;
         } else if (comparison < 0) {
@@ -66,6 +66,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Удаление элемента в дереве
      * Средняя
      */
+
+    private boolean isRemoveIterator = false;
+
     @Override
     public boolean remove(Object o) {
         if (!contains(o)) return false;
@@ -84,7 +87,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 isLeftChild = true;
             }
         }
-        listNodes.remove(current);
+        if (!isRemoveIterator) listNodes.remove(data);
         if (current.left == null) {
             if (current == root) {
                 root = current.right;
@@ -166,11 +169,14 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Средняя
          */
 
-        private int location = 0;
+        private Iterator<T> iterator = listNodes.iterator();
 
         private Node<T> findNext() {
-            if (listNodes.isEmpty()) return null;
-            else return (location < listNodes.size()) ? listNodes.get(location++) : null;
+            //if (iterator.hasNext()) {
+              //  return find(iterator.next());
+            //}
+            //return null;
+            return (iterator.hasNext()) ? find(iterator.next()):null;
         }
 
         @Override
@@ -191,8 +197,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            if (location < listNodes.size()) {
-                BinaryTree.this.remove(listNodes.get(location).value);
+            if (iterator.hasNext()) {
+                isRemoveIterator = true;
+                BinaryTree.this.remove(iterator.next());
+                isRemoveIterator = false;
+                iterator.remove();
             }
         }
     }
