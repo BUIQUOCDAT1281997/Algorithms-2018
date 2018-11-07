@@ -118,7 +118,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 successor.right = current.right;
             }
             successor.left = current.left;
-
             if (current == root) {
                 root = successor;
             } else if (isLeftChild) {
@@ -127,6 +126,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 parent.right = successor;
             }
         }
+        size--;
         return true;
     }
 
@@ -175,13 +175,13 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             if (iterator.hasNext()) {
                 return find(iterator.next());
             }
-            throw new NoSuchElementException();
+            return null;
 
         }
 
         @Override
         public boolean hasNext() {
-            return findNext() != null;
+            return iterator.hasNext();
         }
 
         @Override
@@ -197,12 +197,11 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            if (iterator.hasNext()) {
-                isRemoveIterator = true;
-                BinaryTree.this.remove(iterator.next());
-                isRemoveIterator = false;
-                iterator.remove();
-            }
+            if (current == null) return;
+            isRemoveIterator = true;
+            BinaryTree.this.remove(current.value);
+            isRemoveIterator = false;
+            iterator.remove();
         }
     }
 
