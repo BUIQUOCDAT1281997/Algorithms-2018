@@ -94,7 +94,27 @@ abstract class AbstractHeadTailTest {
     }
 
     protected fun doSubSetTest() {
-        TODO()
+        var set: SortedSet<Int> = tree.subSet(5, 9)
+        assertEquals(false, set.contains(1))
+        assertEquals(false, set.contains(2))
+        assertEquals(false, set.contains(3))
+        assertEquals(false, set.contains(4))
+        assertEquals(false, set.contains(5))
+        assertEquals(true, set.contains(6))
+        assertEquals(true, set.contains(7))
+        assertEquals(true, set.contains(8))
+        assertEquals(false, set.contains(9))
+        assertEquals(false, set.contains(10))
+
+        set = tree.subSet(120, 150)
+        for (i in 1..10) {
+            assertEquals(false, set.contains(i))
+        }
+
+        set = tree.subSet(0, 11)
+        for (i in 1..10) {
+            assertEquals(true, set.contains(i))
+        }
     }
 
 }

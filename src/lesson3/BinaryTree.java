@@ -230,8 +230,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        SortedSet<T> result = new TreeSet<>();
+        for (T element : listNodes) {
+            if (element.compareTo(fromElement) > 0 && element.compareTo(toElement) < 0)
+                result.add(element);
+        }
+        return result;
     }
 
     /**
@@ -241,8 +245,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
-        // TODO
-        throw new NotImplementedError();
+        SortedSet<T> result = new TreeSet<>();
+        for (T element : listNodes) {
+            if (element.compareTo(toElement) < 0)
+                result.add(element);
+        }
+        return result;
     }
 
     /**
@@ -252,8 +260,12 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        // TODO
-        throw new NotImplementedError();
+        SortedSet<T> result = new TreeSet<>();
+        for (T element : listNodes) {
+            if (element.compareTo(fromElement) >= 0)
+                result.add(element);
+        }
+        return result;
     }
 
     @Override
