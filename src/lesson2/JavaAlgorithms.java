@@ -187,7 +187,7 @@ public class JavaAlgorithms {
      * В файле буквы разделены пробелами, строки -- переносами строк.
      * Остальные символы ни в файле, ни в словах не допускаются.
      */
-    static public boolean testWord(boolean[][] booleans, String[][] array, String word, int x, int y) {
+    static private boolean testWord(boolean[][] booleans, String[][] array, String word, int x, int y) {
         if (word.length() == 1) return true;
         String str = String.valueOf(word.charAt(1));
         String sub = word.substring(1);
