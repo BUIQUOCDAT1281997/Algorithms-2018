@@ -275,7 +275,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-       return new ConCuaDuaRa<>(this,false,fromElement, true, null);
+        return new ConCuaDuaRa<>(this, false, fromElement, true, null);
     }
 
     @Override
@@ -340,7 +340,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         }
     }
 
-    static final class ConCuaDuaRa<T extends Comparable<T>> extends DuaRaSet<T> {/// VAN DE VS T
+    static final class ConCuaDuaRa<T extends Comparable<T>> extends DuaRaSet<T> {
 
         ConCuaDuaRa(BinaryTree<T> m,
                     boolean fromStart, T lo,
@@ -351,7 +351,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @Override
         public int size() {
             return m.sizeSubSet(lo, hi);
-        }//TAI SAO KHONG VIET OW TREN MA VIET O DUOI NAY
+        }
 
         @NotNull
         @Override
@@ -369,7 +369,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @NotNull
         @Override
         public SortedSet<T> tailSet(T fromElement) {
-            return new ConCuaDuaRa<>(m,false,fromElement,toEnd,hi);
+            return new ConCuaDuaRa<>(m, false, fromElement, toEnd, hi);
         }
 
         // Я не успел написать эти методы
