@@ -9,6 +9,7 @@ import java.util.*;
 @SuppressWarnings("WeakerAccess")
 public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
 
+
     private static class Node<T> {
         final T value;
 
@@ -25,8 +26,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
     private int size = 0;
 
-    private Set<T> listNodes = new TreeSet<>();
-
     @Override
     public boolean add(T t) {
         Node<T> closest = find(t);
@@ -35,7 +34,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return false;
         }
         Node<T> newNode = new Node<>(t);
-        listNodes.add(t);
         if (closest == null) {
             root = newNode;
         } else if (comparison < 0) {
@@ -49,6 +47,28 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return true;
     }
 
+    private int sizeSubSet(T from, T toEnd) {
+        count = 0;
+        sizeSubSet(from, toEnd, root);
+        return count;
+    }
+
+    private int count;
+
+    private void sizeSubSet(T from, T toEnd, Node<T> node) {
+        if (node != null) {
+            sizeSubSet(from, toEnd, node.left);
+            if (from == null) {
+                if (node.value.compareTo(toEnd) < 0) count++;
+            } else if (toEnd == null) {
+                if (node.value.compareTo(from) >= 0) count++;
+            } else {
+                if (node.value.compareTo(from) > 0 && node.value.compareTo(toEnd) < 0) count++;
+            }
+            sizeSubSet(from, toEnd, node.right);
+        }
+    }
+
     public boolean checkInvariant() {
         return root == null || checkInvariant(root);
     }
@@ -60,13 +80,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return right == null || right.value.compareTo(node.value) > 0 && checkInvariant(right);
     }
 
-
     /**
      * Удаление элемента в дереве
      * Средняя
      */
-
-    private boolean isRemoveIterator = false;
 
     @Override
     public boolean remove(Object o) {
@@ -86,7 +103,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 isLeftChild = true;
             }
         }
-        if (!isRemoveIterator) listNodes.remove(data);
         if (current.left == null) {
             if (current == root) {
                 root = current.right;
@@ -159,8 +175,21 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
 
         private Node<T> current = null;
 
+        private int location = 0;
+
+        private List<Node<T>> list;
 
         private BinaryTreeIterator() {
+            list = new ArrayList<>();
+            addToList(root);
+        }
+
+        private void addToList(Node<T> node) {
+            if (node != null) {
+                addToList(node.left);
+                list.add(node);
+                addToList(node.right);
+            }
         }
 
         /**
@@ -168,19 +197,13 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          * Средняя
          */
 
-        private Iterator<T> iterator = listNodes.iterator();
-
         private Node<T> findNext() {
-            if (iterator.hasNext()) {
-                return find(iterator.next());
-            }
-            return null;
-
+            return list.get(location++);
         }
 
         @Override
         public boolean hasNext() {
-            return iterator.hasNext();
+            return location < list.size();
         }
 
         @Override
@@ -196,11 +219,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
          */
         @Override
         public void remove() {
-            if (current == null) return;
-            isRemoveIterator = true;
-            BinaryTree.this.remove(current.value);
-            isRemoveIterator = false;
-            iterator.remove();
+            BinaryTree.this.remove(list.get(location - 1).value);
+            list.remove(list.get(location - 1));
+            location--;
         }
     }
 
@@ -226,15 +247,13 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      * Для этой задачи нет тестов (есть только заготовка subSetTest), но её тоже можно решить и их написать
      * Очень сложная
      */
+
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        SortedSet<T> result = new TreeSet<>();
-        for (T element : listNodes) {
-            if (element.compareTo(fromElement) > 0 && element.compareTo(toElement) < 0)
-                result.add(element);
-        }
-        return result;
+        return new ConCuaDuaRa<>(this,
+                false, fromElement,
+                false, toElement);
     }
 
     /**
@@ -244,12 +263,9 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
-        SortedSet<T> result = new TreeSet<>();
-        for (T element : listNodes) {
-            if (element.compareTo(toElement) < 0)
-                result.add(element);
-        }
-        return result;
+        return new ConCuaDuaRa<>(this,
+                true, null, false,
+                toElement);
     }
 
     /**
@@ -259,12 +275,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        SortedSet<T> result = new TreeSet<>();
-        for (T element : listNodes) {
-            if (element.compareTo(fromElement) >= 0)
-                result.add(element);
-        }
-        return result;
+       return new ConCuaDuaRa<>(this,false,fromElement, true, null);
     }
 
     @Override
@@ -285,5 +296,107 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             current = current.right;
         }
         return current.value;
+    }
+
+    abstract static class DuaRaSet<T extends Comparable<T>> extends AbstractSet<T>
+            implements CheckableSortedSet<T> {
+        final BinaryTree<T> m;
+        final T lo, hi;
+        final boolean fromStart, toEnd;
+
+        DuaRaSet(BinaryTree<T> m,
+                 boolean fromStart, T lo,
+                 boolean toEnd, T hi) {
+            this.m = m;
+            this.fromStart = fromStart;
+            this.lo = lo;
+            this.toEnd = toEnd;
+            this.hi = hi;
+        }
+
+        final boolean inRange(Object o) {
+            @SuppressWarnings("unchecked")
+            T t = (T) o;
+            if (lo != null && hi != null) {
+                return t.compareTo(lo) > 0 && t.compareTo(hi) < 0;
+            } else if (lo == null) {
+                return t.compareTo(hi) < 0;
+            } else return t.compareTo(lo) >= 0;
+        }
+
+        @Override
+        public boolean add(T t) {
+            return inRange(t) && m.add(t);
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return inRange(o) && m.remove(o);
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return inRange(o) && m.contains(o);
+        }
+    }
+
+    static final class ConCuaDuaRa<T extends Comparable<T>> extends DuaRaSet<T> {/// VAN DE VS T
+
+        ConCuaDuaRa(BinaryTree<T> m,
+                    boolean fromStart, T lo,
+                    boolean toEnd, T hi) {
+            super(m, fromStart, lo, toEnd, hi);
+        }
+
+        @Override
+        public int size() {
+            return m.sizeSubSet(lo, hi);
+        }//TAI SAO KHONG VIET OW TREN MA VIET O DUOI NAY
+
+        @NotNull
+        @Override
+        public SortedSet<T> subSet(T fromElement, T toElement) {
+            return new ConCuaDuaRa<>(m, false, fromElement,
+                    false, toElement);
+        }
+
+        @NotNull
+        @Override
+        public SortedSet<T> headSet(T toElement) {
+            return new ConCuaDuaRa<>(m, fromStart, lo, false, toElement);
+        }
+
+        @NotNull
+        @Override
+        public SortedSet<T> tailSet(T fromElement) {
+            return new ConCuaDuaRa<>(m,false,fromElement,toEnd,hi);
+        }
+
+        // Я не успел написать эти методы
+        @Override
+        public boolean checkInvariant() {
+            return false;
+        }
+
+        @Nullable
+        @Override
+        public Comparator<? super T> comparator() {
+            return m.comparator();
+        }
+
+        @Override
+        public T first() {
+            return null;
+        }
+
+        @Override
+        public T last() {
+            return null;
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            return null;
+        }
     }
 }

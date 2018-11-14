@@ -117,4 +117,23 @@ abstract class AbstractHeadTailTest {
         }
     }
 
+    protected fun doSubSetRelationTest() {
+        val set: SortedSet<Int> = tree.subSet(3, 8)
+        assertEquals(4, set.size)
+        assertEquals(10, tree.size)
+        set.remove(5)
+        assertFalse(tree.contains(5))
+        tree.remove(6)
+        assertFalse(set.contains(6))
+        tree.add(11)
+        assertFalse(set.contains(11))
+        tree.add(5)
+        assertTrue(set.contains(5))
+        assertEquals(3, set.size)
+        assertEquals(10, tree.size)
+        assertFalse(tree.contains(6))
+        set.add(6)
+        assertTrue(tree.contains(6))
+    }
+
 }
