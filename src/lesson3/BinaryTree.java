@@ -144,6 +144,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         size--;
         return true;
     }
+    // трудоёмкост : O(log(n)) n- количество узлов дерева
+    // ресурсоёмкост : O(1)
 
     @Override
     public boolean contains(Object o) {
@@ -200,6 +202,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         private Node<T> findNext() {
             return list.get(location++);
         }
+        // трудоёмкост : O(1)
+        // ресурсоёмкост : O(1)
 
         @Override
         public boolean hasNext() {
@@ -223,6 +227,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             list.remove(list.get(location - 1));
             location--;
         }
+        // трудоёмкост : O(log(n)) n- количество узлов дерева
+        // ресурсоёмкост : O(1)
     }
 
     @NotNull
@@ -251,7 +257,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> subSet(T fromElement, T toElement) {
-        return new ConCuaDuaRa<>(this,
+        return new ImpSortedSet<>(this,
                 false, fromElement,
                 false, toElement);
     }
@@ -263,7 +269,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> headSet(T toElement) {
-        return new ConCuaDuaRa<>(this,
+        return new ImpSortedSet<>(this,
                 true, null, false,
                 toElement);
     }
@@ -275,7 +281,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     @NotNull
     @Override
     public SortedSet<T> tailSet(T fromElement) {
-        return new ConCuaDuaRa<>(this, false, fromElement, true, null);
+        return new ImpSortedSet<>(this, false, fromElement, true, null);
     }
 
     @Override
@@ -298,15 +304,15 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         return current.value;
     }
 
-    abstract static class DuaRaSet<T extends Comparable<T>> extends AbstractSet<T>
-            implements CheckableSortedSet<T> {
+    static final class ImpSortedSet<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
+
         final BinaryTree<T> m;
         final T lo, hi;
         final boolean fromStart, toEnd;
 
-        DuaRaSet(BinaryTree<T> m,
-                 boolean fromStart, T lo,
-                 boolean toEnd, T hi) {
+        ImpSortedSet(BinaryTree<T> m,
+                    boolean fromStart, T lo,
+                    boolean toEnd, T hi) {
             this.m = m;
             this.fromStart = fromStart;
             this.lo = lo;
@@ -338,15 +344,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         public boolean contains(Object o) {
             return inRange(o) && m.contains(o);
         }
-    }
-
-    static final class ConCuaDuaRa<T extends Comparable<T>> extends DuaRaSet<T> {
-
-        ConCuaDuaRa(BinaryTree<T> m,
-                    boolean fromStart, T lo,
-                    boolean toEnd, T hi) {
-            super(m, fromStart, lo, toEnd, hi);
-        }
 
         @Override
         public int size() {
@@ -356,23 +353,70 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @NotNull
         @Override
         public SortedSet<T> subSet(T fromElement, T toElement) {
-            return new ConCuaDuaRa<>(m, false, fromElement,
+            if (fromElement.compareTo(toElement) > 0) throw new NoSuchElementException();
+            return new ImpSortedSet<>(m, false, fromElement,
                     false, toElement);
         }
 
         @NotNull
         @Override
         public SortedSet<T> headSet(T toElement) {
-            return new ConCuaDuaRa<>(m, fromStart, lo, false, toElement);
+            return new ImpSortedSet<>(m, fromStart, lo, false, toElement);
         }
 
         @NotNull
         @Override
         public SortedSet<T> tailSet(T fromElement) {
-            return new ConCuaDuaRa<>(m, false, fromElement, toEnd, hi);
+            return new ImpSortedSet<>(m, false, fromElement, toEnd, hi);
+        }
+
+        @Override
+        public T first() {
+            if (size() == 0) throw new NoSuchElementException();
+            if (lo == null) {
+                return m.first();
+            } else if (toEnd) {
+                return lo;
+            } else {
+                Iterator<T> bIterator = m.iterator();
+                T current = null;
+                while (bIterator.hasNext()) {
+                    current = bIterator.next();
+                    if (current.compareTo(lo) == 0) {
+                        current = bIterator.next();
+                        break;
+                    }
+                }
+                return current;
+            }
+        }
+
+        @Override
+        public T last() {
+            if (size() == 0) throw new NoSuchElementException();
+            if (hi == null) {
+                return m.last();
+            } else {
+                Iterator<T> bIterator = m.iterator();
+                T current;
+                T sCurrent = null;
+                while (bIterator.hasNext()) {
+                    current = bIterator.next();
+                    if (current.compareTo(hi) == 0) {
+                        break;
+                    }
+                    sCurrent = current;
+                }
+                return sCurrent;
+            }
         }
 
         // Я не успел написать эти методы
+        @Override
+        public Iterator<T> iterator() {
+            return null;
+        }
+
         @Override
         public boolean checkInvariant() {
             return false;
@@ -381,21 +425,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @Nullable
         @Override
         public Comparator<? super T> comparator() {
-            return m.comparator();
-        }
-
-        @Override
-        public T first() {
-            return null;
-        }
-
-        @Override
-        public T last() {
-            return null;
-        }
-
-        @Override
-        public Iterator<T> iterator() {
             return null;
         }
     }
