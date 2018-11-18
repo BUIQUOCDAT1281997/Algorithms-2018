@@ -144,7 +144,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         size--;
         return true;
     }
-    // трудоёмкост : O(log(n)) n- количество узлов дерева
+    // трудоёмкост : O(log(n)) в средним случае, O(n) в худшем случае n- количество узлов дерева
     // ресурсоёмкост : O(1)
 
     @Override
@@ -203,7 +203,7 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
             return list.get(location++);
         }
         // трудоёмкост : O(1)
-        // ресурсоёмкост : O(1)
+        // ресурсоёмкост : O(n) n - количество елементов в list
 
         @Override
         public boolean hasNext() {
@@ -224,10 +224,10 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
         @Override
         public void remove() {
             BinaryTree.this.remove(list.get(location - 1).value);
-            list.remove(list.get(location - 1));
+            list.remove(location-1);
             location--;
         }
-        // трудоёмкост : O(log(n)) n- количество узлов дерева
+        // трудоёмкост : O(log(n)) в средним случае, O(n) в худшем случае n- количество узлов дерева
         // ресурсоёмкост : O(1)
     }
 
@@ -261,6 +261,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 false, fromElement,
                 false, toElement);
     }
+    // Трудоемкость: O(1)
+    // Ресурсоемкость: O(1)
 
     /**
      * Найти множество всех элементов меньше заданного
@@ -273,6 +275,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
                 true, null, false,
                 toElement);
     }
+    // Трудоемкость: O(1)
+    // Ресурсоемкость: O(1)
 
     /**
      * Найти множество всех элементов больше или равных заданного
@@ -283,6 +287,8 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
     public SortedSet<T> tailSet(T fromElement) {
         return new ImpSortedSet<>(this, false, fromElement, true, null);
     }
+    // Трудоемкость: O(1)
+    // Ресурсоемкость: O(1)
 
     @Override
     public T first() {
