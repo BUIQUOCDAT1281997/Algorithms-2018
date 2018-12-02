@@ -25,7 +25,7 @@ public class JavaDynamicTasks {
     public static String longestCommonSubSequence(String first, String second) {
         throw new NotImplementedError();
     }
-    
+
     /**
      * Наибольшая возрастающая подпоследовательность
      * Средняя
