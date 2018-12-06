@@ -7,7 +7,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 @SuppressWarnings("unused")
 public class JavaDynamicTasks {
@@ -71,7 +70,15 @@ public class JavaDynamicTasks {
             result.add(list.get(n));
             n = arrayTrace[n];
         }
-        Collections.sort(result);
+
+        int current;
+        int symmetry;
+        for (int i =0; i< result.size()/2; i++){
+            symmetry = result.size()-1-i;
+            current = result.get(i);
+            result.set(i,result.get(symmetry) );
+            result.set(symmetry, current);
+        }
         return result;
     }
     // трудоёмкост : O(n*n)
