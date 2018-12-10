@@ -70,15 +70,8 @@ public class JavaDynamicTasks {
             result.add(list.get(n));
             n = arrayTrace[n];
         }
-
-        int current;
-        int symmetry;
-        for (int i =0; i< result.size()/2; i++){
-            symmetry = result.size()-1-i;
-            current = result.get(i);
-            result.set(i,result.get(symmetry) );
-            result.set(symmetry, current);
-        }
+        
+        Collections.reverse(result);
         return result;
     }
     // трудоёмкост : O(n*n)
